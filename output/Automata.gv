@@ -1,0 +1,25 @@
+// png
+digraph Automata {
+	edge [len=2.0]
+	epsilon [label=epsilon]
+	end [label=end]
+	0 [label=A]
+	1 [label=B]
+	2 [label=B]
+	3 [label=A]
+	4 [label=B]
+	5 [label=A]
+	epsilon -> 0
+	5 -> end
+	0 -> 1
+	1 -> 2
+	2 -> 3
+	3 -> 4
+	4 -> 5
+	0 -> epsilon
+	1 -> 0
+	2 -> 0
+	3 -> 0
+	4 -> 1
+	5 -> 2
+}
