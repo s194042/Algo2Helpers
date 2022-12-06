@@ -57,22 +57,25 @@ def KMP(P,T):
 
 def automata(P):
     f = create_fail(P)
-    dot = graphviz.Digraph("Automata","png",engine="neato")
-    dot.edge_attr["len"] = "2.0"
-    dot.node("epsilon","epsilon")
-    dot.node("end","end")
-    for i,c in enumerate(P):
-        dot.node(str(i),c)
-    dot.edge("epsilon","0")
-    dot.edge(str(len(P)-1),"end")
-    for i in range(1,len(P)):
-        dot.edge(str(i-1),str(i))
-    for i,fail in enumerate(f):
-        if fail == 0:
-            dot.edge(str(i),"epsilon")
-        else:
-            dot.edge(str(i),str(fail-1))
-    dot.render(directory="output",view=True)
+    graph = graphviz.Digraph("Automata","png",engine="dot")
+    with graph.subgraph() as dot:
+        dot.attr(rank="same")
+        dot.edge_attr["len"] = "2.0"
+        dot.graph_attr["rankdir"] = "LR"
+        dot.node("epsilon","epsilon")
+        dot.node("end","end")
+        for i,c in enumerate(P):
+            dot.node(str(i),c)
+        dot.edge("epsilon","0")
+        dot.edge(str(len(P)-1),"end")
+        for i in range(1,len(P)):
+            dot.edge(str(i-1),str(i))
+        for i,fail in enumerate(f):
+            if fail == 0:
+                dot.edge(str(i),"epsilon")
+            else:
+                dot.edge(str(i),str(fail-1))
+    graph.render(directory="output",view=True)
             
 
 
