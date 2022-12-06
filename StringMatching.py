@@ -3,7 +3,7 @@ import graphviz
 
 def create_fail(p):
     # add useless character in front, to correct index
-    p = "e" + p
+    p = "e" + p + "#"
     m = len(p)
     fail = [0] * m
     j = 0
@@ -63,14 +63,15 @@ def automata(P):
         dot.edge_attr["len"] = "2.0"
         dot.graph_attr["rankdir"] = "LR"
         dot.node("epsilon","epsilon")
-        dot.node("end","end")
+        dot.node("#","#")
         for i,c in enumerate(P):
             dot.node(str(i),c)
         dot.edge("epsilon","0")
-        dot.edge(str(len(P)-1),"end")
+        dot.edge(str(len(P)-1),"#")
+        dot.edge("#",str(f[-1]-1))
         for i in range(1,len(P)):
             dot.edge(str(i-1),str(i))
-        for i,fail in enumerate(f):
+        for i,fail in enumerate(f[:-1]):
             if fail == 0:
                 dot.edge(str(i),"epsilon")
             else:

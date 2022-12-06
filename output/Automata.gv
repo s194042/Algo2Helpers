@@ -5,31 +5,26 @@ digraph Automata {
 		edge [len=2.0]
 		rank=same
 		epsilon [label=epsilon]
-		end [label=end]
-		0 [label=B]
+		"#" [label="#"]
+		0 [label=A]
 		1 [label=B]
-		2 [label=A]
-		3 [label=C]
+		2 [label=B]
+		3 [label=A]
 		4 [label=B]
-		5 [label=B]
-		6 [label=B]
-		7 [label=A]
+		5 [label=A]
 		epsilon -> 0
-		7 -> end
+		5 -> "#"
+		"#" -> 1
 		0 -> 1
 		1 -> 2
 		2 -> 3
 		3 -> 4
 		4 -> 5
-		5 -> 6
-		6 -> 7
 		0 -> epsilon
 		1 -> 0
-		2 -> 1
+		2 -> 0
 		3 -> 0
-		4 -> 0
-		5 -> 1
-		6 -> 2
-		7 -> 2
+		4 -> 1
+		5 -> 2
 	}
 }
