@@ -12,7 +12,7 @@ def create_fail(p):
         while j > 0 and p[i] != p[j]:
             j = fail[j]
         j += 1
-    return fail[1:]
+    return list(map(lambda x : x-1,fail[2:]))
 
 
 
@@ -57,25 +57,23 @@ def KMP(P,T):
 
 def automata(P):
     f = create_fail(P)
+    colors = ["chartreuse","blue","chocolate","coral","darkmagenta","hotpink","red","maroon","olive","turquoise1"]
     graph = graphviz.Digraph("Automata","png",engine="dot")
     with graph.subgraph() as dot:
         dot.attr(rank="same")
         dot.edge_attr["len"] = "2.0"
         dot.graph_attr["rankdir"] = "LR"
-        dot.node("epsilon","epsilon")
-        dot.node("#","#")
+        dot.node("epsilon","0")
         for i,c in enumerate(P):
-            dot.node(str(i),c)
+            dot.node(str(i),str(i+1))
         dot.edge("epsilon","0")
-        dot.edge(str(len(P)-1),"#")
-        dot.edge("#",str(f[-1]-1))
         for i in range(1,len(P)):
-            dot.edge(str(i-1),str(i))
-        for i,fail in enumerate(f[:-1]):
+            dot.edge(str(i-1),str(i),P[i])
+        for i,fail in enumerate(f):
             if fail == 0:
-                dot.edge(str(i),"epsilon")
+                dot.edge(str(i),"epsilon",tail_port="n",constriant = "false", color=colors[i % len(colors)],label="  ")
             else:
-                dot.edge(str(i),str(fail-1))
+                dot.edge(str(i),str(fail-1),color=colors[i % len(colors)],label = "  ")
     graph.render(directory="output",view=True)
             
 

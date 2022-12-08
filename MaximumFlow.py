@@ -1,5 +1,6 @@
 from collections import defaultdict, deque
 import graphviz
+import math
 
 def __create_G(l):
     G = defaultdict(dict)
@@ -21,7 +22,7 @@ def __format_list(l):
     return formatted_list
 
 
-def dfs(s,t,G):
+def dfs(s,t,G,min = 0):
     stack = [s]
     visited = set()
     f = dict()
@@ -31,24 +32,24 @@ def dfs(s,t,G):
             current = stack.pop()
         visited.add(current)
         for (n,e,cap,b) in G[current].values():
-            if e == t and cap > 0:
+            if e == t and cap > min:
                 return __create_path(s,t,f,current)
-            if e not in visited and cap > 0:
+            if e not in visited and cap > min:
                 f[e] = current
                 stack.append(e)
     return []
 
 
-def bfs(s,t,G):
+def bfs(s,t,G,min = 0):
     queue = deque([s])
     visited = set()
     f = dict()
     while queue:
         current = queue.popleft()
         for (n,e,cap,b) in G[current].values():
-            if e == t and cap > 0:
+            if e == t and cap > min:
                 return __create_path(s,t,f,current)
-            if e not in visited and cap > 0:
+            if e not in visited and cap > min:
                 visited.add(e)
                 f[e] = current
                 queue.append(e)
@@ -103,6 +104,43 @@ def EdmundKarp(s,t,inp,p = False):
     return sum([G[e[1]][e[0]][2] for e in G[s].values()])
 
 
+def EdmundKarpScaling(s,t,inp,p = False):
+    G = __create_G(__format_list(inp))
+    tmp = max([edge[2] for edge in sum([list(edges.values()) for edges in G.values()],start=[])])
+    print(tmp)
+    scale = int(2 ** math.floor(math.log(tmp,2)))
+    while scale > 0:
+        while path := bfs(s,t,G,scale-1):
+            edge_path,a,path = __augment(path,G)
+            if p:
+                print(path,a)
+        scale //=2 
+            
+    if p:
+        __to_graph(G)
+    
+    return sum([G[e[1]][e[0]][2] for e in G[s].values()])
+
+
+
+def FordFolkersonScaling(s,t,inp,p = False):
+    G = __create_G(__format_list(inp))
+    tmp = max([edge[2] for edge in sum([list(edges.values()) for edges in G.values()],start=[])])
+    print(tmp)
+    scale = int(2 ** math.floor(math.log(tmp,2)))
+    while scale > 0:
+        while path := dfs(s,t,G,scale-1):
+            edge_path,a,path = __augment(path,G)
+            if p:
+                print(path,a)
+        scale //=2 
+            
+    if p:
+        __to_graph(G)
+    
+    return sum([G[e[1]][e[0]][2] for e in G[s].values()])
+
+
 def MinimumCut(s,t,inp):
     G = __create_G(__format_list(inp))
     
@@ -133,8 +171,8 @@ def __to_graph(G):
         for edge in G[e].values():
             f,t,cap,b = edge
             if not b: continue
-            cap = G[t][f][2]
-            dot.edge(str(f),str(t),label=str(cap))
+            cap1 = G[t][f][2]
+            dot.edge(str(f),str(t),label=str(cap1) + "/" + str(cap1 + cap))
 
     dot.render(directory="output",view=True)
 

@@ -1,6 +1,6 @@
 import math
 
-# ---------- Does not work yet ----------
+# ---------- works with current notes with insert(i,x) inserting left of i ----------
 
 class RotateArray:
     def __init__(self,n) -> None:
